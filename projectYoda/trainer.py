@@ -1,14 +1,19 @@
-# TODO: transform into a class --> Trainer
-# TODO: use pipelines for iteration and production
+# TBD: refactoring as class (i.e. Trainer()) necessary?
+# TBD: explicit scikit learn pipeline required?
+#   --> Keras workflow is already a pipeline
+# TODO: model.predict function in separate file
 
+import joblib
 import pandas as pd
+from projectYoda.data import get_dataframes
+from projectYoda.gcp import store_model_on_gcp
+from projectYoda.params import root_dir
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Conv2D, Dropout, MaxPooling2D, Activation
 from tensorflow.keras import optimizers
 from tensorflow.keras import callbacks
-from projectYoda.data import get_dataframes
-from projectYoda.params import root_dir
+from termcolor import colored
 
 
 # Source for image data preprocessing
@@ -90,6 +95,10 @@ def train(model, train_generator, valid_generator):
                     callbacks=[es],
                     verbose=1,
                     epochs=epochs)
+    # save model locally
+    joblib.dump(model, 'model.joblib')
+    print(colored("model.joblib saved locally", "green"))
+    store_model_on_gcp()
     return model
 
 # TODO: implement function to evaluate model on test set
