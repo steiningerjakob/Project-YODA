@@ -80,3 +80,42 @@ upload_data:
 
 run_api:
 	uvicorn api.api:app --reload
+
+# ----------------------------------
+#  Create docker file and publsih via gcloud
+# ----------------------------------
+
+# set configurations for glcoud -> select the project ID required
+
+config_gcloud:
+	gcloud config set project project-yoda-333014
+
+# build a docker image with M1/apple silicon chip
+# select project ID and give an image name
+
+docker_build_m1:
+	docker build --platform linux/amd64 -t eu.gcr.io/project-yoda-333014/project_yoda .
+
+# build a docker image with intel chip
+# select project ID and give an image name
+
+docker_build_intel:
+	docker build --platform linux/amd64 -t eu.gcr.io/project-yoda-333014/project_yoda .
+
+# run the docker image locally to double check that it's working, terminate the run before using docker_push
+# select project ID and give an image name
+
+docker_run:
+	docker run -e PORT=8000 -p 8000:8000 eu.gcr.io/project-yoda-333014/project_yoda
+
+# push the docker image to gcloud
+# select project ID and give an image name
+
+docker_push:
+	docker push eu.gcr.io/project-yoda-333014/project_yoda
+
+# deploy the image on gcloud run
+# select project ID and give an image name
+
+docker_deploy:
+	gcloud run deploy --image eu.gcr.io/project-yoda-333014/project_yoda --platform managed --region europe-west1
