@@ -4,10 +4,8 @@
 # TODO: model.predict function in separate file
 
 import joblib
-import pandas as pd
-from projectYoda.data import get_dataframes
+from projectYoda.data import get_dataframes_from_gcp
 from projectYoda.gcp import store_model_on_gcp
-from projectYoda.params import root_dir
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Conv2D, Dropout, MaxPooling2D, Activation
@@ -19,8 +17,12 @@ from termcolor import colored
 # Source for image data preprocessing
 # https://vijayabhaskar96.medium.com/tutorial-on-keras-imagedatagenerator-with-flow-from-dataframe-8bd5776e45c1
 
-def preprocess_data(df_train, df_valid, root_dir):
+
+def preprocess_data(df_train, df_valid):
     '''Loads and preprocesses image data'''
+
+    # TBD: Potentially replace with gcp path
+    root_dir = "./raw_data/"
 
     train_datagen = ImageDataGenerator(rescale = 1./255.,
                                        rotation_range = 30,
@@ -34,21 +36,23 @@ def preprocess_data(df_train, df_valid, root_dir):
                                        horizontal_flip = True)
     test_datagen = ImageDataGenerator(rescale=1.0 / 255.)
 
-    train_generator = train_datagen.flow_from_dataframe(dataframe=df_train,
-                                                directory=root_dir,
-                                                x_col="path",
-                                                y_col="minifigure_name",
-                                                class_mode="categorical",
-                                                target_size=(512, 512),
-                                                batch_size=16)
-    valid_generator = test_datagen.flow_from_dataframe(dataframe=df_valid,
-                                                directory=root_dir,
-                                                x_col="path",
-                                                y_col="minifigure_name",
-                                                class_mode="categorical",
-                                                target_size=(512, 512),
-                                                batch_size=16,
-                                                shuffle=False)
+    train_generator = train_datagen.flow_from_dataframe(
+        dataframe=df_train,
+        directory=root_dir,
+        x_col="path",
+        y_col="minifigure_name",
+        class_mode="categorical",
+        target_size=(512, 512),
+        batch_size=16)
+    valid_generator = test_datagen.flow_from_dataframe(
+        dataframe=df_valid,
+        directory=root_dir,
+        x_col="path",
+        y_col="minifigure_name",
+        class_mode="categorical",
+        target_size=(512, 512),
+        batch_size=16,
+        shuffle=False)
     return train_generator, valid_generator
 
 
@@ -120,7 +124,9 @@ def train(model, train_generator, valid_generator):
 
 
 if __name__ == "__main__":
-    df_train, df_valid = get_dataframes()
-    train_generator, valid_generator = preprocess_data(df_train, df_valid, root_dir)
+    df_train, df_valid = get_dataframes_from_gcp()
+    train_generator, valid_generator = preprocess_data(df_train, df_valid)
+    print(valid_generator)
     model = init_model()
-    trained_model = train(model, train_generator, valid_generator)
+    model.summary()
+    train(model, train_generator, valid_generator)
