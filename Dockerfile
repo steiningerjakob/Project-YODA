@@ -5,3 +5,5 @@ COPY frontend /frontend
 COPY requirements.txt /requirements.txt
 RUN pip install -r requirements.txt
 CMD uvicorn frontend.api:app --host 0.0.0.0 --port $PORT
+
+# CMD streamlit run --server.port 8080 --server.enableCORS false app.py

@@ -59,4 +59,4 @@ pypi:
 # ----------------------------------
 
 run_api:
-	uvicorn frontend.api:app --reload
+	uvicorn api.api:app --reload
