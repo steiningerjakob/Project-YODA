@@ -22,21 +22,31 @@ from termcolor import colored
 def preprocess_data(df_train, df_valid, root_dir):
     '''Loads and preprocesses image data'''
 
-    datagen = ImageDataGenerator(rescale=1. / 255)
+    train_datagen = ImageDataGenerator(rescale = 1./255.,
+                                       rotation_range = 30,
+                                       width_shift_range = 0.3,
+                                       height_shift_range = 0.3,
+                                       brightness_range=[0.2,1.0],
+                                       shear_range = 0.3,
+                                       zoom_range = 0.4,
+                                       fill_mode='nearest',
+                                       vertical_flip=True,
+                                       horizontal_flip = True)
+    test_datagen = ImageDataGenerator(rescale=1.0 / 255.)
 
-    train_generator = datagen.flow_from_dataframe(dataframe=df_train,
+    train_generator = train_datagen.flow_from_dataframe(dataframe=df_train,
                                                 directory=root_dir,
                                                 x_col="path",
                                                 y_col="minifigure_name",
                                                 class_mode="categorical",
-                                                target_size=(256, 256),
+                                                target_size=(512, 512),
                                                 batch_size=16)
-    valid_generator = datagen.flow_from_dataframe(dataframe=df_valid,
+    valid_generator = test_datagen.flow_from_dataframe(dataframe=df_valid,
                                                 directory=root_dir,
                                                 x_col="path",
                                                 y_col="minifigure_name",
                                                 class_mode="categorical",
-                                                target_size=(256, 256),
+                                                target_size=(512, 512),
                                                 batch_size=16,
                                                 shuffle=False)
     return train_generator, valid_generator
@@ -50,7 +60,7 @@ def init_model():
     input_shape = (512, 512, 3)
     padding = 'same'
     number_of_classes = 36
-    opt = optimizers.Adam(learning_rate=0.01)
+    opt = optimizers.Adam(learning_rate=0.001)
 
     # archtitecture
     model = Sequential()
