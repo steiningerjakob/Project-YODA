@@ -61,7 +61,7 @@ pypi:
 BUCKET_NAME=wagon-data-745-project-yoda
 
 # TODO: to be verified if * works to upload everything in that directory
-LOCAL_PATH=raw_data/*
+LOCAL_PATH=raw_data/
 
 # bucket directory in which to store the uploaded file (`data` is an arbitrary name that we choose to use)
 BUCKET_FOLDER=data
