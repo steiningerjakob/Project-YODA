@@ -47,7 +47,7 @@ def init_model():
     '''Initializes model'''
 
     # params - to be finetuned
-    input_shape = (256, 256, 3)
+    input_shape = (512, 512, 3)
     padding = 'same'
     number_of_classes = 36
     opt = optimizers.Adam(learning_rate=0.01)

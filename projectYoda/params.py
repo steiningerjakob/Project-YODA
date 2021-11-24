@@ -24,7 +24,7 @@ BUCKET_NAME = 'wagon-data-745-project-yoda'
 ##### Data  - - - - - - - - - - - - - - - - - - - - - - - -
 
 # train data file location - not yet implemented
-BUCKET_TRAIN_DATA_PATH = 'data/index.csv'
+BUCKET_DATA_PATH = 'raw_data'
 
 ##### Training  - - - - - - - - - - - - - - - - - - - - - -
 
