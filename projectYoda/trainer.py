@@ -4,7 +4,7 @@
 # TODO: model.predict function in separate file
 
 import joblib
-from projectYoda.data import get_dataframes_from_gcp
+from projectYoda.data import get_train_data
 from projectYoda.gcp import store_model_on_gcp
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
@@ -25,15 +25,16 @@ def preprocess_data(df_train, df_valid):
     root_dir = "./raw_data/"
 
     train_datagen = ImageDataGenerator(rescale = 1./255.,
-                                       rotation_range = 30,
-                                       width_shift_range = 0.3,
-                                       height_shift_range = 0.3,
-                                       brightness_range=[0.2,1.0],
-                                       shear_range = 0.3,
-                                       zoom_range = 0.4,
-                                       fill_mode='nearest',
-                                       vertical_flip=True,
-                                       horizontal_flip = True)
+                                       #rotation_range = 30,
+                                       #width_shift_range = 0.3,
+                                       #height_shift_range = 0.3,
+                                       #brightness_range=[0.2,1.0],
+                                       #shear_range = 0.3,
+                                       #zoom_range = 0.4,
+                                       #fill_mode='nearest',
+                                       #vertical_flip=True,
+                                       #horizontal_flip = True
+                                       )
     test_datagen = ImageDataGenerator(rescale=1.0 / 255.)
 
     train_generator = train_datagen.flow_from_dataframe(
@@ -70,20 +71,20 @@ def init_model():
     model = Sequential()
     model.add(Conv2D(32, (3, 3), padding=padding, input_shape=input_shape))
     model.add(Activation('relu'))
-    model.add(Conv2D(32, (3, 3)))
-    model.add(Activation('relu'))
+    #model.add(Conv2D(32, (3, 3)))
+    #model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
 
-    model.add(Conv2D(64, (3, 3), padding=padding))
-    model.add(Activation('relu'))
-    model.add(Conv2D(64, (3, 3)))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    #model.add(Conv2D(64, (3, 3), padding=padding))
+    #model.add(Activation('relu'))
+    #model.add(Conv2D(64, (3, 3)))
+    #model.add(Activation('relu'))
+    #model.add(MaxPooling2D(pool_size=(2, 2)))
+    #model.add(Dropout(0.25))
 
     model.add(Flatten())
-    model.add(Dense(512))
+    model.add(Dense(64))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(number_of_classes, activation='softmax'))
@@ -124,9 +125,9 @@ def train(model, train_generator, valid_generator):
 
 
 if __name__ == "__main__":
-    df_train, df_valid = get_dataframes_from_gcp()
+    df_train, df_valid = get_train_data(source='gcp')
     train_generator, valid_generator = preprocess_data(df_train, df_valid)
     print(valid_generator)
     model = init_model()
     model.summary()
-    train(model, train_generator, valid_generator)
+    #train(model, train_generator, valid_generator)
