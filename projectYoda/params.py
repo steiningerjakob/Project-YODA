@@ -31,7 +31,7 @@ BUCKET_DATA_PATH = 'raw_data'
 ##### Model - - - - - - - - - - - - - - - - - - - - - - - -
 
 # model folder name (will contain the folders for all trained model versions)
-MODEL_NAME = 'classification'
+MODEL_NAME = 'classification/baseline'
 
 # model version folder name (where the trained model.joblib file will be stored)
 MODEL_VERSION = 'v1'

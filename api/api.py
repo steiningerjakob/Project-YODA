@@ -1,3 +1,4 @@
+import base64
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import joblib
@@ -14,11 +15,6 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
-
-@app.get('/')
-def index():
-    return {'Yoda says:', 'You must unlearn what you have learned!'}
-
 
 def preprocess_test_image(image):
     '''Transform test image into vector for model prediction'''
@@ -38,8 +34,18 @@ def get_model(source='local'):
 
     return model
 
+@app.get('/')
+def index():
+    return {'Yoda says:', 'You must unlearn what you have learned!'}
 
-def predict(image):
+
+@app.post('/predict')
+def predict(image_base64):
+
+    coded_string = image_base64['image']
+    print(coded_string)
+
+    image = base64.b64decode(coded_string)
 
     test_image = preprocess_test_image(image)
     df_test = get_test_data()
