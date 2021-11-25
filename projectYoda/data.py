@@ -46,5 +46,5 @@ def load_images(root_dir, df):
 
 
 if __name__ == "__main__":
-    df_train, df_valid = get_dataframes_from_gcp()
+    df_train, df_valid = get_train_data(source='gcp')
     print(df_valid.head())
