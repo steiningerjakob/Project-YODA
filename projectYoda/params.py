@@ -7,8 +7,6 @@ EXPERIMENT_NAME = "[SW] [Stockholm] [steiningerjakob] prod_v0.1"
 
 PATH_TO_LOCAL_MODEL = 'model.joblib'
 
-root_dir = "../raw_data/"
-
 ### GCP configuration - - - - - - - - - - - - - - - - - - -
 
 # /!\ you should fill these according to your account
