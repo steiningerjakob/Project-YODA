@@ -20,9 +20,10 @@ def store_model_on_gcp(rm=False):
         os.remove('model.joblib')
 
 
-def get_model_from_gcp(rm=False):
+def get_model_from_gcp():
     """Get the model from Google Cloud Storage"""
     storage_location = f"models/{MODEL_NAME}/{MODEL_VERSION}/{LOCAL_MODEL_NAME}"
     path = f"gs://{BUCKET_NAME}/{storage_location}"
     model = joblib.load(path)
+
     return model
