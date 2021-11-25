@@ -1,14 +1,19 @@
-# TODO: transform into a class --> Trainer
-# TODO: use pipelines for iteration and production
+# TBD: refactoring as class (i.e. Trainer()) necessary?
+# TBD: explicit scikit learn pipeline required?
+#   --> Keras workflow is already a pipeline
+# TODO: model.predict function in separate file
 
+import joblib
 import pandas as pd
+from projectYoda.data import get_dataframes
+from projectYoda.gcp import store_model_on_gcp
+from projectYoda.params import root_dir
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Conv2D, Dropout, MaxPooling2D, Activation
 from tensorflow.keras import optimizers
 from tensorflow.keras import callbacks
-from projectYoda.data import get_dataframes
-from projectYoda.params import root_dir
+from termcolor import colored
 
 
 # Source for image data preprocessing
@@ -17,21 +22,31 @@ from projectYoda.params import root_dir
 def preprocess_data(df_train, df_valid, root_dir):
     '''Loads and preprocesses image data'''
 
-    datagen = ImageDataGenerator(rescale=1. / 255)
+    train_datagen = ImageDataGenerator(rescale = 1./255.,
+                                       rotation_range = 30,
+                                       width_shift_range = 0.3,
+                                       height_shift_range = 0.3,
+                                       brightness_range=[0.2,1.0],
+                                       shear_range = 0.3,
+                                       zoom_range = 0.4,
+                                       fill_mode='nearest',
+                                       vertical_flip=True,
+                                       horizontal_flip = True)
+    test_datagen = ImageDataGenerator(rescale=1.0 / 255.)
 
-    train_generator = datagen.flow_from_dataframe(dataframe=df_train,
+    train_generator = train_datagen.flow_from_dataframe(dataframe=df_train,
                                                 directory=root_dir,
                                                 x_col="path",
                                                 y_col="minifigure_name",
                                                 class_mode="categorical",
-                                                target_size=(256, 256),
+                                                target_size=(512, 512),
                                                 batch_size=16)
-    valid_generator = datagen.flow_from_dataframe(dataframe=df_valid,
+    valid_generator = test_datagen.flow_from_dataframe(dataframe=df_valid,
                                                 directory=root_dir,
                                                 x_col="path",
                                                 y_col="minifigure_name",
                                                 class_mode="categorical",
-                                                target_size=(256, 256),
+                                                target_size=(512, 512),
                                                 batch_size=16,
                                                 shuffle=False)
     return train_generator, valid_generator
@@ -42,10 +57,10 @@ def init_model():
     '''Initializes model'''
 
     # params - to be finetuned
-    input_shape = (256, 256, 3)
+    input_shape = (512, 512, 3)
     padding = 'same'
     number_of_classes = 36
-    opt = optimizers.Adam(learning_rate=0.01)
+    opt = optimizers.Adam(learning_rate=0.001)
 
     # archtitecture
     model = Sequential()
@@ -90,6 +105,10 @@ def train(model, train_generator, valid_generator):
                     callbacks=[es],
                     verbose=1,
                     epochs=epochs)
+    # save model locally
+    joblib.dump(model, 'model.joblib')
+    print(colored("model.joblib saved locally", "green"))
+    store_model_on_gcp()
     return model
 
 # TODO: implement function to evaluate model on test set
