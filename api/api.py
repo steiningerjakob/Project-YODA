@@ -62,19 +62,17 @@ def download_blob():
 def preprocess_test_image(image):
     '''Transform test image into vector for model prediction'''
 
-    test_image = image.resize((256, 256))
+    # resize image to 224x224 pixels
+    test_image = image.resize((224, 224))
+    # represent image as numpy array
     pixels = np.asarray(test_image)
     # convert from integers to floats
     pixels = pixels.astype('float32')
     # normalize to the range 0-1
     pixels /= 255.0
-    # confirm the normalization
-
+    # reshape numpy array to pass into model
     test_image = np.reshape(
-        pixels,
-        (1, 256, 256,
-         3))  # 1 image, (256, 256) size, 3 representing the RGB type.
-    print('test_image: ', test_image)
+        pixels,(1, 224, 224,3))  # 1 image, (224, 224) size, 3 representing the RGB type.
 
     return test_image
 
@@ -109,11 +107,10 @@ def predict():
 
     # get model locally - from root directory
     model = get_model(source='local')
-    print(model)
 
     # make prediction
     result = model.predict(test_image) # returns an array of probabilities
-    print(result)
+
     # convert prediction class into minifigure name
     prediction_class = result.argmax() # returns the class with the highest probability
     prediction_character = df_test['minifigure_name'].iloc[prediction_class]
