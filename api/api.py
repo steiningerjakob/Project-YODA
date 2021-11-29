@@ -5,6 +5,7 @@ os.environ["SM_FRAMEWORK"] = "tf.keras"
 
 import cv2
 import base64
+import pandas as pd
 from io import BytesIO
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -83,15 +84,23 @@ def predict():
 
     test_image = preprocess_test_image(image)
     print(test_image)
-    df_test = get_test_data()
 
     model = get_model(source='local')
     print(model)
+
 
     result = model.predict(test_image) # returns an array of probabilities
     print(result)
 
     prediction_class = result.argmax() # returns the class with the highest probability
+    print(prediction_class)
+
+    test = pd.read_csv("raw_data/test.csv")
+    metadata = pd.read_csv("raw_data/metadata.csv")
+    df_test = pd.merge(test,
+                       metadata[['class_id', 'minifigure_name']],
+                       on='class_id')
+
     prediction_character = df_test['minifigure_name'].iloc[prediction_class]
 
     # API Output:
