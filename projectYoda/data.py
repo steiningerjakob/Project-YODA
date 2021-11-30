@@ -37,6 +37,14 @@ def get_test_data(**kwargs):
     return df_test
 
 
+def get_metadata(**kwargs):
+    """method to get the test data from google cloud bucket"""
+    base_path = f"gs://{BUCKET_NAME}/{BUCKET_DATA_PATH}"
+    metadata = pd.read_csv(f'{base_path}/metadata.csv')
+
+    return metadata
+
+
 def load_images(root_dir, df):
     '''Load images from root director and path from datafram'''
 
