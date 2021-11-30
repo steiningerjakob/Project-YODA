@@ -7,7 +7,6 @@ from PIL import Image
 from projectYoda.data import get_test_data
 from projectYoda.gcp import get_model_from_gcp
 from google.cloud import storage
-from io import BytesIO
 
 from tensorflow import keras
 
@@ -85,13 +84,17 @@ def get_model(source='local'):
 
     return model
 
+
+model = get_model(source='local')
+
+
 @app.get('/')
 def index():
     return {'Yoda says:', 'You must unlearn what you have learned!'}
 
 
 @app.get('/predict')
-def predict():
+def predict(model):
 
     # save image to local directory as blob
     download_blob()
@@ -104,9 +107,6 @@ def predict():
 
     # get test df for minifigure name mapping
     df_test = get_test_data()
-
-    # get model locally - from root directory
-    model = get_model(source='local')
 
     # make prediction
     result = model.predict(test_image) # returns an array of probabilities
