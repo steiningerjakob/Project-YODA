@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import joblib
+import cv2
 import numpy as np
 from PIL import Image
 #import segmentation_models as sm
-from projectYoda.data import get_test_data
+from projectYoda.data import get_test_data, get_metadata
 from projectYoda.gcp import get_model_from_gcp
 from google.cloud import storage
-from io import BytesIO
 
 from tensorflow import keras
 
@@ -62,19 +62,24 @@ def download_blob():
 def preprocess_test_image(image):
     '''Transform test image into vector for model prediction'''
 
-    # resize image to 224x224 pixels
-    test_image = image.resize((224, 224))
-    # represent image as numpy array
-    pixels = np.asarray(test_image)
-    # convert from integers to floats
-    pixels = pixels.astype('float32')
-    # normalize to the range 0-1
-    pixels /= 255.0
-    # reshape numpy array to pass into model
-    test_image = np.reshape(
-        pixels,(1, 224, 224,3))  # 1 image, (224, 224) size, 3 representing the RGB type.
+    testImage = cv2.resize(image, (224,224))
+    testImage = cv2.cvtColor(testImage, cv2.COLOR_BGR2RGB) / 255.0
+    testImage = np.reshape(testImage, (1, 224, 224, 3))
 
-    return test_image
+
+    # resize image to 224x224 pixels
+    #test_image = image.resize((224, 224))
+    # represent image as numpy array
+    #pixels = np.asarray(test_image)
+    # convert from integers to floats
+    #pixels = pixels.astype('float32')
+    # normalize to the range 0-1
+    #pixels /= 255.0
+    # reshape numpy array to pass into model
+    #test_image = np.reshape(
+    #pixels,(1, 224, 224,3))  # 1 image, (224, 224) size, 3 representing the RGB type.
+
+    return testImage
 
 
 def get_model(source='local'):
@@ -84,6 +89,7 @@ def get_model(source='local'):
         model = get_model_from_gcp(model='classification/baseline')
 
     return model
+
 
 @app.get('/')
 def index():
@@ -97,15 +103,14 @@ def predict():
     download_blob()
 
     # open image from local directory as Pillow object
-    image = Image.open('./image.jpg')
+    image = cv2.imread('./image.jpg')
 
     # preprocess image for input into model (resize, reshape, rescale)
     test_image = preprocess_test_image(image)
 
     # get test df for minifigure name mapping
-    df_test = get_test_data()
+    df_meta = get_metadata()
 
-    # get model locally - from root directory
     model = get_model(source='local')
 
     # make prediction
@@ -113,7 +118,10 @@ def predict():
 
     # convert prediction class into minifigure name
     prediction_class = result.argmax() # returns the class with the highest probability
-    prediction_character = df_test['minifigure_name'].iloc[prediction_class]
+    prediction_class = prediction_class + 1
+    print(prediction_class)
+    prediction_character = df_meta['minifigure_name'][df_meta['class_id'] ==
+                                                      prediction_class].iloc[0]
 
     # return minifigure name as JSON for frontend:
     return dict(prediction=prediction_character)
