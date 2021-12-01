@@ -6,4 +6,3 @@
 #*.csv
 **/__pycache__/
 .env
-model.joblib
