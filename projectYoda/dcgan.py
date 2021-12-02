@@ -2,11 +2,7 @@ import numpy as np
 from tensorflow import keras
 import os
 from datetime import datetime
-from google.colab import drive
 
-drive.mount('/content/drive')
-
-# mount google drive
 
 INPUT_DIR = './gan_data/gan_input'
 OUTPUT_DIR = f'./gan_data/gan_output'
