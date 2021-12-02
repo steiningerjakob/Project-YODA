@@ -34,6 +34,7 @@ mlflow
 s3fs
 uvicorn
 fastapi
+google
 
 # utilities
 six>=1.14
