@@ -1,5 +1,7 @@
 # Project YODA
 
+<img width="997" alt="Screenshot 2021-12-09 at 15 43 14" src="https://user-images.githubusercontent.com/77202477/145417537-d92db467-3282-48a9-9994-c03093e21c4d.png">
+
 ## Description
 
 Project YODA is an AI engine for image classification and generation based on LEGO minifigures. 
