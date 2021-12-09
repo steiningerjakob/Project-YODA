@@ -1,74 +1,31 @@
-# Data analysis
-- Document here the project: Project-YODA
-- Description: Project Description
-- Data Source:
-- Type of analysis:
+# Project YODA
 
-Please document the project the better you can.
+## Description
 
-# Startup the project
+Project YODA is an AI engine for image classification and generation based on LEGO minifigures. 
 
-The initial setup.
+## The team
 
-Create virtualenv and install the project:
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv ~/venv ; source ~/venv/bin/activate ;\
-    pip install pip -U; pip install -r requirements.txt
-```
+This application was created for educational purposes by [Yiping](https://github.com/ypzhangescp), [Daniel](https://github.com/Daniel-Lars), [Hicham](https://github.com/HicZer) and myself. 
 
-Unittest test:
-```bash
-make clean install test
-```
+## Usage
 
-Check for Project-YODA in gitlab.com/{group}.
-If your project is not set please add it:
+**Image classification:** Simply go to [our website](https://updated-frontend-zl47dkr23a-ew.a.run.app/), select an image for prediction, hit *Classify me!*, and enjoy Yoda's predictions! Currently, the application supports around 40 different characters from the Star Wars, Marvel, Harry Potter and Jurrasic Park universes. Go to the Kaggle dataset linked below for a full list of supported characters.
 
-- Create a new project on `gitlab.com/{group}/Project-YODA`
-- Then populate it:
+**Image generation:** Check out this short presentation for initial results of the [image generation engine](https://github.com/steiningerjakob/Project-YODA/blob/master/notebooks/Project%20Yoda%20-%20Demo%20Day%20Presentation_vFINAL.pdf).
 
-```bash
-##   e.g. if group is "{group}" and project_name is "Project-YODA"
-git remote add origin git@github.com:{group}/Project-YODA.git
-git push -u origin master
-git push -u origin --tags
-```
+## Technologies used
 
-Functionnal test with a script:
+- Backend:
+  - Convolutional neural network models using Tensorflow Keras
+  - Google Colab and Compute Engine for GPU-powered model training  
+  - Prediction API using FastAPI
+  - Data and model storage on Google Cloud Storage  
+- Frontend in [separate GitHub repo](https://github.com/Daniel-Lars/Project-YODA_frontend):
+  - Streamlit 
+- Deployment:
+  - Docker images deployed on Google Cloud Run
 
-```bash
-cd
-mkdir tmp
-cd tmp
-Project-YODA-run
-```
+### The dataset
 
-# Install
-
-Go to `https://github.com/{group}/Project-YODA` to see the project, manage issues,
-setup you ssh public key, ...
-
-Create a python3 virtualenv and activate it:
-
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv -ppython3 ~/venv ; source ~/venv/bin/activate
-```
-
-Clone the project and install it:
-
-```bash
-git clone git@github.com:{group}/Project-YODA.git
-cd Project-YODA
-pip install -r requirements.txt
-make clean install test                # install and test
-```
-Functionnal test with a script:
-
-```bash
-cd
-mkdir tmp
-cd tmp
-Project-YODA-run
-```
+[Kaggle LEGO Minifigures](https://www.kaggle.com/ihelon/lego-minifigures-classification)
