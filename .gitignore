@@ -2,7 +2,9 @@
 .coverage
 .ipynb_checkpoints
 .DS_Store
-#raw_data/
-#*.csv
+raw_data/
+gan_data/
+notebooks/
+*.ipynb
 **/__pycache__/
 .env

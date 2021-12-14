@@ -7,18 +7,6 @@ wheel>=0.29
 # data science
 numpy
 pandas
-scikit-learn
-
-# deep learning
-tensorflow==2.7.0
-segmentation-models
-tensorflow-datasets==4.0.1
-tensorflow-estimator==2.7.0
-tensorflow-gcs-config==2.7.0
-tensorflow-hub==0.12.0
-tensorflow-io-gcs-filesystem==0.22.0
-tensorflow-metadata==1.4.0
-tensorflow-probability==0.15.0
 
 # tests/linter
 black
@@ -30,7 +18,6 @@ yapf
 # API
 gcsfs
 google-cloud-storage
-mlflow
 s3fs
 uvicorn
 fastapi
@@ -38,7 +25,6 @@ fastapi
 # utilities
 six>=1.14
 joblib
-memoized-property
 termcolor
 Pillow
 opencv-python

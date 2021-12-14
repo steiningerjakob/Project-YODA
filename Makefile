@@ -79,7 +79,7 @@ upload_data:
 # ----------------------------------
 
 run_api:
-	uvicorn api.api:app --reload
+	uvicorn api.api:app --reload --host="0.0.0.0"
 
 # ----------------------------------
 #  Create docker file and publsih via gcloud
@@ -106,7 +106,7 @@ docker_build_intel:
 # select project ID and give an image name
 
 docker_run:
-	docker run -e PORT=8000 -p 8000:8000 eu.gcr.io/project-yoda-333014/project_yoda
+	docker run -e PORT=5000 -p 5000:5000 eu.gcr.io/project-yoda-333014/project_yoda
 
 # push the docker image to gcloud
 # select project ID and give an image name

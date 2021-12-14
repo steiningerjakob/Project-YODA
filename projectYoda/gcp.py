@@ -20,7 +20,7 @@ def store_model_on_gcp(rm=False):
         os.remove('model.joblib')
 
 
-def get_model_from_gcp():
+def get_model_from_gcp(model='classification/baseline'):
     """Get the model from Google Cloud Storage"""
     storage_location = f"models/{MODEL_NAME}/{MODEL_VERSION}/{LOCAL_MODEL_NAME}"
     path = f"gs://{BUCKET_NAME}/{storage_location}"

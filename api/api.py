@@ -9,16 +9,6 @@ from projectYoda.data import get_test_data, get_metadata
 from projectYoda.gcp import get_model_from_gcp
 from google.cloud import storage
 
-from tensorflow import keras
-
-### deep learning imports
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten, Conv2D, Dropout, MaxPooling2D, Activation
-from tensorflow.keras import optimizers
-from tensorflow.keras import callbacks
-from tensorflow.keras import utils
-
 
 IMAGE_URL = 'https://storage.cloud.google.com/wagon-data-745-project-yoda/images/image.jpg'
 BUCKET_NAME = 'wagon-data-745-project-yoda'
@@ -65,19 +55,6 @@ def preprocess_test_image(image):
     testImage = cv2.resize(image, (224,224))
     testImage = cv2.cvtColor(testImage, cv2.COLOR_BGR2RGB) / 255.0
     testImage = np.reshape(testImage, (1, 224, 224, 3))
-
-
-    # resize image to 224x224 pixels
-    #test_image = image.resize((224, 224))
-    # represent image as numpy array
-    #pixels = np.asarray(test_image)
-    # convert from integers to floats
-    #pixels = pixels.astype('float32')
-    # normalize to the range 0-1
-    #pixels /= 255.0
-    # reshape numpy array to pass into model
-    #test_image = np.reshape(
-    #pixels,(1, 224, 224,3))  # 1 image, (224, 224) size, 3 representing the RGB type.
 
     return testImage
 
